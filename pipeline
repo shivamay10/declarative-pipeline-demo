@@ -1,0 +1,28 @@
+pipeline {
+   agent any
+
+    stages {
+      stage('Build') {
+         steps {
+            // Get some code from a GitHub repository
+            git 'https://github.com/javahometech/myapp-2020-jan-930.git'
+            
+         }    
+         }
+      stage('Build the package') {
+             steps {
+            // Run Maven on a Unix agent.
+            sh "mvn -Dmaven.test.failure.ignore=true clean package"
+         }
+         
+         }
+      stage('deploy to tomcat for testing') {
+          steps {
+           sh 'sudo rm -rf /opt/tomcat/tomcat/webapps/'
+           sh 'sudo cp /var/lib/jenkins/workspace/pipeline/target/*.war /opt/tomcat/tomcat/webapps/'
+          }
+          
+      }
+        
+    }
+   }
